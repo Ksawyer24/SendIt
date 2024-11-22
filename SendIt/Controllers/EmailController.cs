@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using SendIt.Dto;
 using SendIt.Repo;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace SimpleEmailApp.Controllers
 {
@@ -16,11 +19,14 @@ namespace SimpleEmailApp.Controllers
             this.emailRepo = emailRepo;
         }
 
+
         [HttpPost]
-        public async Task<IActionResult> SendEmail(EmailDto request)
+        public async Task<IActionResult> SendEmail(string receptor, string subject, string body)
         {
-            await emailRepo.SendEmailAsync(request);
-            return Ok(new { Message = "Email sent successfully" });
+            await emailRepo.SendEmail(receptor, subject, body);
+            return Ok();
         }
+
+
     }
 }

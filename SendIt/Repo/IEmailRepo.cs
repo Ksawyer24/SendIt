@@ -1,9 +1,7 @@
-﻿using SendIt.Dto;
-
-namespace SendIt.Repo
+﻿namespace SendIt.Repo
 {
     public interface IEmailRepo
     {
-        Task SendEmailAsync(EmailDto request);
+        Task SendEmail(string receptor,string subject,string body);
     }
 }

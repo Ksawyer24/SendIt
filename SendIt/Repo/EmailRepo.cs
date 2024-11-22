@@ -1,48 +1,48 @@
-﻿using MailKit.Net.Smtp;
-using MailKit.Security;
-using Microsoft.Extensions.Configuration;
-using MimeKit;
-using MimeKit.Text;
-using SendIt.Dto;
-using System;
-using System.Threading.Tasks;
+﻿using System.Net;
+using System.Net.Mail;
 
 namespace SendIt.Repo
 {
-    public class EmailRepo : IEmailRepo
+    public class EmailRepo:IEmailRepo
     {
         private readonly IConfiguration config;
+
 
         public EmailRepo(IConfiguration config)
         {
             this.config = config;
+
         }
 
-        public async Task SendEmailAsync(EmailDto request)
+        public async Task SendEmail(string receptor, string subject, string body)
         {
-            var email = new MimeMessage();
-            email.From.Add(MailboxAddress.Parse(config.GetValue<string>("EmailUsername")));
-            email.To.Add(MailboxAddress.Parse(request.To));
-            email.Subject = request.Subject;
-            email.Body = new TextPart(TextFormat.Html) { Text = request.Body };
+            var email = config.GetValue<string>("EMAIL_CONFIGURATION:EMAIL");
+            var password = config.GetValue<string>("EMAIL_CONFIGURATION:PASSWORD");
+            var host = config.GetValue<string>("EMAIL_CONFIGURATION:HOST");
+            var port = config.GetValue<int>("EMAIL_CONFIGURATION:PORT");
 
-            using var smtp = new SmtpClient();
+            
+            var smtpClient = new SmtpClient(host,port);
+            smtpClient.EnableSsl = true;
+            smtpClient.UseDefaultCredentials = false;
+
+            smtpClient.Credentials = new NetworkCredential(email, password);
+
+            var message = new MailMessage(email!,receptor, subject, body);   
+           
+
+
             try
             {
-                await smtp.ConnectAsync(config.GetValue<string>("EmailHost"), 587, SecureSocketOptions.StartTls);
-                await smtp.AuthenticateAsync(config.GetValue<string>("EmailUsername"), config.GetValue<string>("EmailPassword"));
-                await smtp.SendAsync(email);
+                await smtpClient.SendMailAsync(message);
             }
+
             catch (Exception ex)
             {
-                // Log the exception (replace with your logging solution)
-                Console.WriteLine($"Error sending email: {ex.Message}");
-                throw; // Rethrow to handle it further up the chain if needed
+                Console.WriteLine($"Email sending failed:{ ex.Message}");
             }
-            finally
-            {
-                await smtp.DisconnectAsync(true);
-            }
+
+
         }
     }
 }

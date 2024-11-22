@@ -67,11 +67,8 @@ builder.Services.AddAutoMapper(typeof(Profiles));
 
 builder.Services.AddScoped<IBookRepo,BookRepo>();
 builder.Services.AddScoped<ITokenRepo, TokenRepo>();
-builder.Services.AddScoped<IEmailRepo,EmailRepo>();
-//builder.Services.AddSingleton(new MailgunRepo(
-//    builder.Configuration["Mailgun:ApiKey"],
-//    builder.Configuration["Mailgun:Domain"])
-//);
+builder.Services.AddTransient<IEmailRepo,EmailRepo>();
+
 
 
 
