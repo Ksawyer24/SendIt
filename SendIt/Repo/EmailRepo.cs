@@ -37,6 +37,7 @@ namespace SendIt.Repo
                 await smtpClient.SendMailAsync(message);
             }
 
+
             catch (Exception ex)
             {
                 Console.WriteLine($"Email sending failed:{ ex.Message}");
