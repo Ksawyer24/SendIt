@@ -12,8 +12,8 @@ using SendIt.Data;
 namespace SendIt.Migrations.SendAuthDb
 {
     [DbContext(typeof(SendAuthDbContext))]
-    [Migration("20241114161402_boo")]
-    partial class boo
+    [Migration("20241203164624_adds")]
+    partial class adds
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

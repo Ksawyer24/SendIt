@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace SendIt.Migrations.SendAuthDb
 {
     /// <inheritdoc />
-    public partial class boo : Migration
+    public partial class adds : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
