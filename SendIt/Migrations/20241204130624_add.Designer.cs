@@ -11,7 +11,7 @@ using SendIt.Data;
 namespace SendIt.Migrations
 {
     [DbContext(typeof(SendItDbContext))]
-    [Migration("20241203164553_add")]
+    [Migration("20241204130624_add")]
     partial class add
     {
         /// <inheritdoc />

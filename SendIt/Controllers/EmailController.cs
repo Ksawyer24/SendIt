@@ -5,6 +5,7 @@ using SendIt.Repo;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace SimpleEmailApp.Controllers
 {
@@ -13,20 +14,40 @@ namespace SimpleEmailApp.Controllers
     public class EmailController : ControllerBase
     {
         private readonly IEmailRepo emailRepo;
+        private readonly ILogger<EmailController> logger;
+        private readonly IConfiguration configuration;
 
-        public EmailController(IEmailRepo emailRepo)
+        public EmailController(IEmailRepo emailRepo, ILogger<EmailController> logger, IConfiguration configuration)
         {
             this.emailRepo = emailRepo;
+            this.logger = logger;
+            this.configuration = configuration;
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> SendEmail(string receptor, string subject, string body)
+        public async Task<IActionResult> SendEmail(string provider, string receptor, string subject, string body)
         {
-            await emailRepo.SendEmail(receptor, subject, body);
-            return Ok();
-        }
+            try
+            {
+                // Validate the provider and check if it exists in the configuration
+                if (!configuration.GetSection($"EMAIL_CONFIGURATION:{provider.ToLower()}").Exists())
+                    return BadRequest($"Invalid email provider: {provider} is not a valid provider");
 
+
+                await emailRepo.SendEmail(provider, receptor, subject, body);
+
+                return Ok("Email Sent");
+            }
+
+            catch (Exception ex)
+            {
+
+                logger.LogError(ex, "Email sending failed");
+                return StatusCode(500, "Email sending failed!");
+            }
+
+        }
 
     }
 }

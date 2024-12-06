@@ -2,6 +2,6 @@
 {
     public interface IEmailRepo
     {
-        Task SendEmail(string receptor,string subject,string body);
+        Task SendEmail(string provider,string receptor,string subject,string body);
     }
 }

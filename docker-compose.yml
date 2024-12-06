@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  sendit:
+    image: ${DOCKER_REGISTRY-}sendit
+    build:
+      context: .
+      dockerfile: SendIt\Dockerfile
